@@ -46,7 +46,6 @@ class UsuarioController extends Controller
             'id' => $id,
             'str_login' => $request->nome,
             'str_senha' => $request->nome,
-            'id_usuario' => $request->nome,
         ]);
         return $login;
     }
