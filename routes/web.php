@@ -16,3 +16,6 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+$router->get('/users', 'UsuarioController@index');
+$router->post('/users/new', 'UsuarioController@new');
