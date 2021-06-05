@@ -1,13 +1,13 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "version": "0.3.1",
-    "title": "WeCare",
+    "version": "0.3.2",
+    "title": "WeCareAPI",
     "description": "API para interagir com o Forum.",
     "externalDocs": [
       {
         "description": "Codigos Fonte API",
-        "url": "https://github.com/FRisney/aep-api"
+        "url": "https://github.com/FRisney/WeCareAPI"
       },
       {
         "description": "Codigos Fonte WebApp",
@@ -39,12 +39,12 @@
   ],
   "servers": [
     {
-      "url": "https://forum-doacao.herokuapp.com",
+      "url": "https://wecareapi.herokuapp.com",
       "description": "Servidor principal"
     }
   ],
   "paths": {
-    "/docs": {
+    "/docs.json": {
       "get": {
         "tags": [
           "Docs"

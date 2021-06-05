@@ -8,4 +8,4 @@ Esta API foi desenvolvida para atender a aplicacao Angular [WeCare](https://gith
 
 ## Especificacao OpenAPI 3
 
-O desenvolvimento da API segue a especificacao no formato OpenAPI 3, que pode ser consultada a qualquer momento [aqui](https://redocly.github.io/redoc/?url=https://forum-doacao.herokuapp.com/docs.json).
+O desenvolvimento da API segue a especificacao no formato OpenAPI 3, que pode ser consultada a qualquer momento [aqui](https://redocly.github.io/redoc/?url=https://wecareapi.herokuapp.com//docs.json).
