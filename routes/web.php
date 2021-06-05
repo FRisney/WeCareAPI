@@ -2,6 +2,8 @@
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
+use Illuminate\Support\Facades\Storage;
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -13,9 +15,23 @@
 |
 */
 
-$router->get('/', function () use ($router) {
-    return $router->app->version();
+// route to retrieve api documentation from the current version
+$router->get('/docs', function() {
+    return Storage::get('openapi.json');
 });
 
-$router->get('/users/{?id}', 'UsuarioController@index');
-$router->post('/users/new', 'UsuarioController@new');
+$router->group(['prefix' => 'users'], function() use ($router) {
+    $router->get('/', 'UsuarioController@index');
+    $router->post('/', 'UsuarioController@new');
+    $router->get('/{id}', 'UsuarioController@perfil');
+    $router->put('/{id}', 'UsuarioController@update');
+    $router->delete('/{id}', 'UsuarioController@delete');
+});
+
+$router->group(['prefix' => 'projetos'], function() use ($router) {
+    $router->get('/', 'ProjetoController@index');
+    $router->post('/', 'ProjetoController@new');
+    $router->get('/{id}', 'ProjetoController@perfil');
+    $router->put('/{id}', 'ProjetoController@update');
+    $router->delete('/{id}', 'ProjetoController@delete');
+});

@@ -112,4 +112,11 @@ $app->router->group([
     require __DIR__.'/../routes/web.php';
 });
 
+$app->disks = [
+    'local' => [
+        'driver' => 'local',
+        'root' => storage_path('app'),
+    ],
+];
+
 return $app;

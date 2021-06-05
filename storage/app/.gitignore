@@ -1,2 +1,4 @@
 *
 !.gitignore
+!openapi.yml
+!openapi.json

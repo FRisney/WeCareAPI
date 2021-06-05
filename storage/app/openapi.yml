@@ -1,0 +1,393 @@
+openapi: 3.0.0
+info:
+  version: 0.3.0
+  title: WeCare
+  description: API para interagir com o Forum.
+tags:
+  - name: Forum
+    description: Interacao com o Forum
+  - name: Projetos
+    description: Interacao com os Projetos
+  - name: Usuarios
+    description: Interacao com os usuarios
+  - name: Beneficiarios
+    description: Interacao com beneficiarios
+  - name: Docs
+    description: Documentacao
+servers:
+  - url: 'https://forum-doacao.herokuapp.com'
+    description: Servidor principal
+paths:
+  /docs:
+    get:
+      tags:
+        - Docs
+      description: Retorna o JSON desta documentacao.
+      responses:
+        '200':
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                type: string
+                format: json
+  /users:
+    get:
+      tags:
+        - Usuarios
+      description: Retorna a lista de usuarios
+      parameters:
+        - $ref: '#/components/parameters/offsetParam'
+        - $ref: '#/components/parameters/limitParam'
+      responses:
+        '200':
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Usuarios'
+    post:
+      tags:
+        - Usuarios
+      description: Insere um novo usuario
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/Login'
+                - $ref: '#/components/schemas/Usuario'
+                - $ref: '#/components/schemas/UsuarioDetail'
+      responses:
+        '201':
+          description: Inserido com sucesso
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '409':
+          description: Ja cadastrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                codigo: 5
+                mensagem: Usuario ja cadastrado
+  '/users/{id}':
+    get:
+      tags:
+        - Usuarios
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      description: Retorna detalhes do usuario
+      responses:
+        '200':
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Usuario'
+                  - $ref: '#/components/schemas/UsuarioDetail'
+        '403':
+          $ref: '#/components/responses/Prohibited'
+        '409':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags:
+        - Usuarios
+      description: Atualiza os detalhes de um usuario
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: Atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsuarioDetail'
+        '403':
+          $ref: '#/components/responses/Prohibited'
+        '409':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags:
+        - Usuarios
+      description: Deleta um Usuario
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: Usuario deletado com sucesso
+        '403':
+          $ref: '#/components/responses/Prohibited'
+        '409':
+          $ref: '#/components/responses/NotFound'
+  /projetos:
+    get:
+      tags:
+        - Projetos
+      description: Retorna a lista de projetos cadastrados
+      parameters:
+        - $ref: '#/components/parameters/offsetParam'
+        - $ref: '#/components/parameters/limitParam'
+      responses:
+        '200':
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Projeto'
+    post:
+      tags:
+        - Projetos
+      description: Insere um novo projeto
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Projeto'
+      responses:
+        '201':
+          description: Projeto inserido com sucesso
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Prohibited'
+        '409':
+          description: Ja cadastrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                codigo: 4
+                mensagem: Projeto ja cadastrado
+  '/projetos/{id}':
+    get:
+      tags:
+        - Projetos
+      description: Retorna os detalhes de um projeto
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Projeto'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags:
+        - Projetos
+      description: Atualiza os detalhes de um projeto
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: Atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Projeto'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags:
+        - Projetos
+      description: Deleta um projeto
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: Projeto deletado com sucesso
+        '403':
+          $ref: '#/components/responses/Prohibited'
+        '409':
+          $ref: '#/components/responses/NotFound'
+
+components:
+  parameters:
+    Id:
+      name: id
+      in: path
+      required: true
+      description: Codigo
+      schema:
+        type: integer
+      example: 25
+    offsetParam:
+      name: de
+      in: query
+      description: Numero de itens a serem ignorado, a partir do primeiro.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        minimum: 0
+        default: 0
+    limitParam:
+      name: qtde
+      in: query
+      description: Numero maximo de itens a retornar.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        minimum: 1
+        maximum: 100
+        default: 20
+  responses:
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            codigo: 1
+            mensagem: Requsicao nao atende especificacao
+    Prohibited:
+      description: Acesso Restrito
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            codigo: 2
+            mensagem: Acesso Restrito
+    NotFound:
+      description: Nao encontrado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            codigo: 3
+            mensagem: Nao encontrado
+    AlreadyRegistered:
+      description: Ja cadastrado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      type: object
+      required:
+        - codigo
+        - mensagem
+      properties:
+        codigo:
+          type: integer
+        mensagem:
+          type: string
+    Projeto:
+      type: object
+      required:
+        - nome
+        - descricao
+        - responsavel
+      properties:
+        nome:
+          type: string
+          default: 'Unicesumar Portao'
+        logo:
+          type: string
+        descricao:
+          type: string
+          default: 'Unicesumar Portao'
+        fundacao:
+          type: string
+          default: '2021-01-01'
+        responsavel:
+          type: string
+          default: '81070-190'
+    Endereco:
+      type: object
+      required:
+        - cep
+        - numero
+        - rua
+        - bairro
+        - cidade
+        - estado
+      properties:
+        cep:
+          type: string
+          format: '/\d{7}-\d{3}/'
+          default: '81070-190'
+        numero:
+          type: string
+          default: '673'
+        rua:
+          type: string
+          default: 'Rua Itajuba'
+        bairro:
+          type: string
+          default: 'Portao'
+        cidade:
+          type: string
+          default: 'Curitiba'
+        estado:
+          type: string
+          default: 'Parana'
+    Login:
+      type: object
+      required:
+        - id
+        - login
+        - senha
+      properties:
+        id:
+          type: integer
+        login:
+          type: string
+        senha:
+          type: string
+          format: password
+    Usuario:
+      type: object
+      required:
+        - id
+        - nome
+      properties:
+        id:
+          type: integer
+          default: 25
+        nome:
+          type: string
+          default: 'Joao da Silva'
+        foto:
+          type: string
+          format: byte
+    UsuarioDetail:
+      type: object
+      required:
+        - genero
+      properties:
+        celular:
+          type: string
+          format: '/\(\d{2}\)\ \d{5}-\d{4}/'
+          default: "(41) 98765-4321"
+        email:
+          type: string
+          format: email
+        genero:
+          type: string
+          format: '/[a-zA-Z]/'
+          enum:
+            - M
+            - F
+        nascimento:
+          type: string
+          format: '/\d{4}-\d{2}-\d{2}/'
+          default: "2021-01-01"
+        endereco:
+          $ref: '#/components/schemas/Endereco'
+    Usuarios:
+      type: array
+      items:
+        $ref: '#/components/schemas/Usuario'
