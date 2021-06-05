@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Storage;
 */
 
 // route to retrieve api documentation from the current version
-$router->get('/docs', function() {
+$router->get('/docs[.json]', function() {
     return Storage::get('openapi.json');
 });
 
