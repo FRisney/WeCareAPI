@@ -1,8 +1,13 @@
 openapi: 3.0.0
 info:
-  version: 0.3.0
+  version: 0.3.1
   title: WeCare
   description: API para interagir com o Forum.
+  externalDocs:
+    - description: Codigos Fonte API
+      url: https://github.com/FRisney/aep-api
+    - description: Codigos Fonte WebApp
+      url: https://github.com/2dsant/WeCare
 tags:
   - name: Forum
     description: Interacao com o Forum
@@ -18,7 +23,7 @@ servers:
   - url: 'https://forum-doacao.herokuapp.com'
     description: Servidor principal
 paths:
-  /docs:
+  /docs.json:
     get:
       tags:
         - Docs

@@ -2,6 +2,7 @@
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 
 /*
@@ -16,8 +17,9 @@ use Illuminate\Support\Facades\Storage;
 */
 
 // route to retrieve api documentation from the current version
-$router->get('/docs[.json]', function() {
-    return Storage::get('openapi.json');
+$router->get('/docs.json', function() {
+    return (new Response( Storage::get('openapi.json'), 200))
+        ->header('Content-Type', 'application/json');
 });
 
 $router->group(['prefix' => 'users'], function() use ($router) {

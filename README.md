@@ -1,24 +1,11 @@
-# Lumen PHP Framework
+# WeCare API
 
-[![Build Status](https://travis-ci.org/laravel/lumen-framework.svg)](https://travis-ci.org/laravel/lumen-framework)
-[![Total Downloads](https://img.shields.io/packagist/dt/laravel/framework)](https://packagist.org/packages/laravel/lumen-framework)
-[![Latest Stable Version](https://img.shields.io/packagist/v/laravel/framework)](https://packagist.org/packages/laravel/lumen-framework)
-[![License](https://img.shields.io/packagist/l/laravel/framework)](https://packagist.org/packages/laravel/lumen-framework)
+Este projeto trata de manter os fontes do back-end da aplicacao web WeCare, desenvolvida como projeto interdisciplinar do 3 semetre do curso de Analise e Desenvolvimento de sistemas no ano de 2021.
 
-Laravel Lumen is a stunningly fast PHP micro-framework for building web applications with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Lumen attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as routing, database abstraction, queueing, and caching.
+## Front-end
 
-## Official Documentation
+Esta API foi desenvolvida para atender a aplicacao Angular [WeCare](https://github.com/2dsant/WeCare).
 
-Documentation for the framework can be found on the [Lumen website](https://lumen.laravel.com/docs).
+## Especificacao OpenAPI 3
 
-## Contributing
-
-Thank you for considering contributing to Lumen! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Lumen, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Lumen framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+O desenvolvimento da API segue a especificacao no formato OpenAPI 3, que pode ser consultada a qualquer momento [aqui](https://redocly.github.io/redoc/?url=https://forum-doacao.herokuapp.com/docs.json).
