@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: 0.3.2
+  version: 0.3.3
   title: WeCareAPI
   description: API para interagir com o Forum.
   externalDocs:
@@ -390,6 +390,13 @@ components:
           type: string
           format: '/\d{4}-\d{2}-\d{2}/'
           default: "2021-01-01"
+        cgc:
+          type: string
+        tipo:
+          type: string
+          enum:
+            - F
+            - J
         endereco:
           $ref: '#/components/schemas/Endereco'
     Usuarios:

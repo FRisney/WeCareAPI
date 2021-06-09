@@ -25,14 +25,12 @@ class UsuarioController extends Controller
         return Usuario::all();
     }
 
-    public function new(Request $request, int $id = null){
+    public function new(Request $request){
         if (DB::table('login')->where('str_login', '=', $request->login)->exists())
             return Response::HTTP_FOUND;
-        if ($id != null) {
-            if (!DB::table()->where('id', $id)->exists())
-                $perfil_id = $this->cadastroPerfil($request)->id;
-        }
-        $login = $this->cadastroLogin($request, $perfil_id);
+        dump($request->input('nome'));
+        $perfil = $this->cadastroPerfil($request);
+        $login = $this->cadastroLogin($request, $perfil->id);
         return Response::HTTP_CREATED;
     }
 
@@ -41,11 +39,11 @@ class UsuarioController extends Controller
      *
      * @return void
      */
-    private function cadastroLogin(Request $request, int $id) {
+    private function cadastroLogin(Request $request, int $perfilId) {
         $login = Login::create([
-            'id' => $id,
-            'str_login' => $request->nome,
-            'str_senha' => $request->nome,
+            'id' => $perfilId,
+            'str_login' => $request->input('login'),
+            'str_senha' => $request->input('senha'),
         ]);
         return $login;
     }
@@ -57,25 +55,35 @@ class UsuarioController extends Controller
      */
     private function cadastroPerfil(Request $request) {
         $perfil = Usuario::create([
-            'str_nome' => $request->nome,
-            'str_celular' => $request->nome,
-            'str_email' => $request->nome,
-            'str_genero' => $request->nome,
-            'int_cgc' => $request->nome,
-            'str_tipo' => $request->nome,
-            'dat_nasc' => $request->nome,
+            'str_nome' => $request->input('nome'),
+            'str_celular' => $request->input('celular'),
+            'str_email' => $request->input('email'),
+            'str_genero' => $request->input('genero'),
+            'int_cgc' => $request->input('cgc'),
+            'str_tipo' => $request->input('tipo'),
+            'dat_nasc' => $request->input('nascimento'),
         ]);
         $endereco = Endereco::create([
-            'str_cep' => $request->nome,
-            'str_numero' => $request->nome,
-            'str_logradouro' => $request->nome,
-            'str_bairro' => $request->nome,
-            'str_cidade' => $request->nome,
-            'str_estado' => $request->nome,
-            'str_cep' => $request->nome,
+            'str_cep' => $request->input('cep'),
+            'str_numero' => $request->input('numero'),
+            'str_logradouro' => $request->input('rua'),
+            'str_bairro' => $request->input('bairro'),
+            'str_cidade' => $request->input('cidade'),
+            'str_estado' => $request->input('estado'),
         ]);
         $perfil->id_endereco = $endereco->id;
         $perfil->save();
         return $perfil;
+    }
+
+    public function perfil(int $id) {
+        return Response(
+            Usuario::find($id)
+        );
+    }
+
+    public function delete(int $id) {
+        $usr = Usuario::find($id);
+        return Response::HTTP_OK;
     }
 }
