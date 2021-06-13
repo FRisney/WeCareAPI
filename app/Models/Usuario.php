@@ -11,7 +11,7 @@ class Usuario extends Model
         'str_celular',
         'str_email',
         'str_genero',
-        'int_cgc',
+        'str_cgc',
         'str_tipo',
         'dat_nasc',
     ];
@@ -22,7 +22,13 @@ class Usuario extends Model
      * @var array
      */
     protected $hidden = [
-        'password', 'int_cgc'
+        'password',
+        'int_cgc',
+        'endereco_id',
     ];
+
+    public function endereco() {
+        return $this->hasMany(Endereco::class);
+    }
 }
 
