@@ -74,34 +74,40 @@ class UsuarioController extends Controller
      * @return Usuario
      */
     private function cadastroPerfil(Request $request) {
-        $endereco = Endereco::create([
-        'str_cep' => $request->input('cep'),
-        'str_numero' => $request->input('numero'),
-        'str_logradouro' => $request->input('rua'),
-        'str_bairro' => $request->input('bairro'),
-        'str_cidade' => $request->input('cidade'),
-        'str_estado' => $request->input('estado'),
-        ]);
-        // $endereco->save();
 
         $perfil = new Usuario;
-        $perfil->str_nome = $request->input('nome');
+        $perfil->str_nome    = $request->input('nome');
         $perfil->str_celular = $request->input('celular');
-        $perfil->str_email = $request->input('email');
-        $perfil->str_genero = $request->input('genero');
-        $perfil->str_cgc = $request->input('cgc');
-        $perfil->str_tipo = $request->input('tipo');
-        $perfil->dat_nasc = $request->input('nascimento');
-        $perfil->endereco_id = $endereco->id;
+        $perfil->str_email   = $request->input('email');
+        $perfil->str_genero  = $request->input('genero');
+        $perfil->str_cgc     = $request->input('cgc');
+        $perfil->str_tipo    = $request->input('tipo');
+        $perfil->dat_nasc    = $request->input('nascimento');
+
+        if (!$request->has('rua') && $request->input('rua') != null) {
+            $endereco = Endereco::create([
+                'str_cep'        => $request->input('cep'),
+                'str_numero'     => $request->input('numero'),
+                'str_logradouro' => $request->input('rua'),
+                'str_bairro'     => $request->input('bairro'),
+                'str_cidade'     => $request->input('cidade'),
+                'str_estado'     => $request->input('estado'),
+            ]);
+            $perfil->endereco_id = $endereco->id;
+        }
+
         $perfil->save();
 
         return $perfil;
     }
 
     public function perfil(int $id) {
-        return Response(
-            Usuario::join('enderecos', 'enderecos.id', '=', 'usuarios.endereco_id')->where('usuarios.id', $id)->get()
-        );
+        $user = Usuario::leftJoin('login', 'login.id', '=', 'usuarios.id')
+            ->leftJoin('enderecos', 'enderecos.id', '=', 'usuarios.endereco_id')
+            ->where('usuarios.id', $id)
+            ->firstOrFail();
+        $user->id = $id;
+        return Response($user);
     }
 
     public function delete(int $id) {
@@ -112,16 +118,25 @@ class UsuarioController extends Controller
     }
 
     public function update(Request $request, int $id) {
-        dump($request->input());
         $usr = Usuario::find($id);
         if ($usr == null) return Response('{"codigo":3,"mesagem":"Nao Encontrado"}',Response::HTTP_NOT_FOUND);
-        dump($usr);
         $lgn = Login::find($id);
-        // if ($usr->str_senha != $request->input('senha')) $usr->str_senha = $request->input('senha');
-        if ($usr->str_celular != $request->input('celular')) $usr->str_celular = $request->input('celular');
-        if ($usr->str_nome != $request->input('nome')) $usr->str_nome = $request->input('nome');
-        if ($usr->str_email != $request->input('email')) $usr->str_email = $request->input('email');
+        if ($lgn->str_senha    != $request->input('senha')) $lgn->str_senha     = $request->input('senha');
+        if ($usr->str_celular  != $request->input('celular')) $usr->str_celular = $request->input('celular');
+        if ($usr->str_nome     != $request->input('nome')) $usr->str_nome       = $request->input('nome');
+        if ($usr->str_email    != $request->input('email')) $usr->str_email     = $request->input('email');
+        if ($request->has('rua')){
+            $endereco = Endereco::find($usr->endereco_id);
+            $endereco->str_logradouro = $request->input('rua');
+            if ($usr->str_cep    != $request->input('cep'))    $usr->str_cep    = $request->input('cep');
+            if ($usr->str_numero != $request->input('numero')) $usr->str_numero = $request->input('numero');
+            if ($usr->str_bairro != $request->input('bairro')) $usr->str_bairro = $request->input('bairro');
+            if ($usr->str_cidade != $request->input('cidade')) $usr->str_cidade = $request->input('cidade');
+            if ($usr->str_estado != $request->input('estado')) $usr->str_estado = $request->input('estado');
+            $endereco->save();
+        }
         $usr->save();
+        $lgn->save();
         return Response('',Response::HTTP_OK);
     }
 }
