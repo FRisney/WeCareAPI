@@ -28,7 +28,7 @@ class Usuario extends Model
     ];
 
     public function endereco() {
-        return $this->hasMany(Endereco::class);
+        return $this->hasOne(Endereco::class);
     }
 }
 

@@ -4,17 +4,16 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use App\Models\Usuario;
-use App\Models\Login;
 use App\Models\Endereco;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class UsuarioController extends Controller
+class ProjetoController extends Controller
 {
     /**
      * Create a new controller instance.
      *
-     * @return Login
+     * @return Projeto
      */
     public function __construct()
     {
@@ -25,21 +24,22 @@ class UsuarioController extends Controller
         $ret = [];
         $qtde = $request->has('qtde');
         $de = $request->has('de');
-        $users = Usuario::all();
-        if ($de) $users = $users->skip($qtde)->get('*');
-        if ($qtde) $users = $users->take($qtde)->get('*');
+        $projs = Projeto::all();
+        if ($de) $projs = $projs->skip($qtde)->get('*');
+        if ($qtde) $projs = $projs->take($qtde)->get('*');
 
-        foreach ($users as $user) {
+        foreach ($projs as $proj) {
             $ret[] = [
-                'id' => $user->id,
-                'nome' => $user->str_nome,
+                'id' => $proj->id,
+                'nome' => $proj->str_nome,
+                //'descricao' => $proj->str_desc,
             ];
         }
         return Response($ret);
     }
 
     public function new(Request $request){
-        $perfil = Usuario::where('str_cgc', $request->input('cgc'));
+        $perfil = Usuario::where('id', $request->input('responsavel'));
         if (!$perfil->exists())
             $perfil = $this->cadastroPerfil($request);
 
@@ -101,13 +101,13 @@ class UsuarioController extends Controller
         return $perfil;
     }
 
-    public function perfil(int $id) {
-        $user = Usuario::leftJoin('login', 'login.id', '=', 'usuarios.id')
-            ->leftJoin('enderecos', 'enderecos.id', '=', 'usuarios.endereco_id')
-            ->where('usuarios.id', $id)
+    public function detalhes(int $id) {
+        $proj = Projeto::innerJoin('usuario', 'usuarios.id', '=', 'usuario_id')
+            ->where('projeto.id', $id)
             ->firstOrFail();
-        $user->id = $id;
-        return Response($user);
+        if ($proj == null) return Response('{"codigo":3,"mesagem":"Nao Encontrado"}',Response::HTTP_NOT_FOUND);
+        //$proj->id = $id;
+        return Response($proj);
     }
 
     public function delete(int $id) {
