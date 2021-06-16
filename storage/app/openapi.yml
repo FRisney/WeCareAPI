@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: 0.3.3
+  version: 0.4.0
   title: WeCareAPI
   description: API para interagir com o Forum.
   externalDocs:
@@ -57,7 +57,7 @@ paths:
       description: Insere um novo usuario
       requestBody:
         content:
-          application/json:
+          multipart/form-data:
             schema:
               allOf:
                 - $ref: '#/components/schemas/Login'
@@ -73,10 +73,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-              example:
-                codigo: 5
-                mensagem: Usuario ja cadastrado
+                $ref: '#/components/responses/AlreadyRegistered'
   '/users/{id}':
     get:
       tags:
@@ -149,7 +146,7 @@ paths:
       requestBody:
         required: true
         content:
-          application/json:
+          multipart/form-data:
             schema:
               $ref: '#/components/schemas/Projeto'
       responses:
@@ -164,10 +161,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-              example:
-                codigo: 4
-                mensagem: Projeto ja cadastrado
+                $ref: '#/components/responses/AlreadyRegistered'
   '/projetos/{id}':
     get:
       tags:
@@ -190,6 +184,11 @@ paths:
       description: Atualiza os detalhes de um projeto
       parameters:
         - $ref: '#/components/parameters/Id'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Projeto'
       responses:
         '200':
           description: Atualizado com sucesso
@@ -208,6 +207,189 @@ paths:
       responses:
         '200':
           description: Projeto deletado com sucesso
+        '403':
+          $ref: '#/components/responses/Prohibited'
+        '409':
+          $ref: '#/components/responses/NotFound'
+  /forum:
+    get:
+      tags:
+        - Forum
+      description: retorna a lista de postagens
+      parameters:
+        - $ref: '#/components/parameters/offsetParam'
+        - $ref: '#/components/parameters/limitParam'
+      responses:
+        '200':
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Postagens'
+    post:
+      tags:
+        - Forum
+      description: Insere uma nova postagem
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Postagem'
+      responses:
+        '201':
+          description: Postagem inserida com sucesso
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Prohibited'
+        '409':
+          description: Ja cadastrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/AlreadyRegistered'
+  /forum/{id}:
+    get:
+      tags:
+        - Forum
+      description: retorna a postagem especifica
+      parameters:
+        - $ref: '#/components/parameters/offsetParam'
+        - $ref: '#/components/parameters/limitParam'
+      responses:
+        '200':
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Postagens'
+    put:
+      tags:
+        - Forum
+      description: Atualiza os detalhes de uma postagem
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Postagem'
+      responses:
+        '200':
+          description: Atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Postagem'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags:
+        - Forum
+      description: Deleta uma postagem
+      parameters:
+        - $ref: '#/components/parameters/Id'
+      responses:
+        '200':
+          description: Postagem deletada com sucesso
+        '403':
+          $ref: '#/components/responses/Prohibited'
+        '409':
+          $ref: '#/components/responses/NotFound'
+  /forum/{id}/comments:
+    get:
+      tags:
+        - Forum
+      description: Retorna a lista de comentarios da postagem
+      parameters:
+        - $ref: '#/components/parameters/offsetParam'
+        - $ref: '#/components/parameters/limitParam'
+      responses:
+        '200':
+          description: Sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Postagens'
+    post:
+      tags:
+        - Forum
+      description: Insere um novo comentario
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Comentario'
+      responses:
+        '201':
+          description: Comentario inserido com sucesso
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Prohibited'
+        '409':
+          description: Ja cadastrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/AlreadyRegistered'
+  /forum/{post_id}/comments/{comment_id}:
+    put:
+      tags:
+        - Forum
+      description: Atualiza os detalhes de um comentario
+      parameters:
+        - name: comment_id
+          in: path
+          required: true
+          description: Codigo do comentario
+          schema:
+            type: integer
+          example: 25
+        - name: post_id
+          in: path
+          required: true
+          description: Codigo da postagem
+          schema:
+            type: integer
+          example: 25
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Postagem'
+      responses:
+        '200':
+          description: Atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Postagem'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      tags:
+        - Forum
+      description: Deleta um comentario
+      parameters:
+        - name: comment_id
+          in: path
+          required: true
+          description: Codigo do comentario
+          schema:
+            type: integer
+          example: 25
+        - name: post_id
+          in: path
+          required: true
+          description: Codigo da postagem
+          schema:
+            type: integer
+          example: 25
+      responses:
+        '200':
+          description: Comentario deletado com sucesso
         '403':
           $ref: '#/components/responses/Prohibited'
         '409':
@@ -278,6 +460,9 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/Error'
+          example:
+            codigo: 4
+            mensagem: Ja cadastrado
   schemas:
     Error:
       type: object
@@ -299,8 +484,6 @@ components:
         nome:
           type: string
           default: 'Unicesumar Portao'
-        logo:
-          type: string
         descricao:
           type: string
           default: 'Unicesumar Portao'
@@ -365,9 +548,6 @@ components:
         nome:
           type: string
           default: 'Joao da Silva'
-        foto:
-          type: string
-          format: byte
     UsuarioDetail:
       type: object
       required:
@@ -403,3 +583,57 @@ components:
       type: array
       items:
         $ref: '#/components/schemas/Usuario'
+    Postagem:
+      type: object
+      required:
+        - titulo
+        - texto
+        - relator
+      properties:
+        titulo:
+          type: string
+        texto:
+          type: string
+        relator:
+          type: integer
+    PostagemDetalhe:
+      type: object
+      required:
+        - id
+        - titulo
+        - texto
+        - relator
+        - data
+      properties:
+        id:
+          type: integer
+        titulo:
+          type: string
+        texto:
+          type: string
+        relator:
+          type: integer
+        data:
+          type: string
+    Postagens:
+      type: array
+      items:
+        $ref: '#/components/schemas/PostagemDetalhe'
+    Comentario:
+      type: object
+      required:
+        - id
+        - relator
+        - data
+      properties:
+        id:
+          type: integer
+        relator:
+          type: string
+        data:
+          type: string
+    Comentarios:
+      type: array
+      items:
+        $ref: '#/components/schemas/Comentario'
+
