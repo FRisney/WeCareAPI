@@ -11,7 +11,8 @@ class Projeto extends Model
 
     protected $fillable = [
         'str_desc',
-        'usuario._id',
+        'usuario_id',
+        'str_nome',
     ];
 
     /**

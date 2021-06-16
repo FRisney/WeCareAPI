@@ -33,111 +33,49 @@ class ProjetoController extends Controller
             $ret[] = [
                 'id' => $proj->id,
                 'nome' => $proj->str_nome,
-                //'descricao' => $proj->str_desc,
             ];
         }
         return Response($ret);
     }
 
     public function new(Request $request){
-        $perfil = Usuario::where('id', $request->input('responsavel'));
-        if (!$perfil->exists())
-            $perfil = $this->cadastroPerfil($request);
-
-        $login = Login::where('str_login', $request->input('login'));
-        if ($login->exists())
-            return Response('{"codigo":3,"mesagem":"Login ja cadastrado"}',Response::HTTP_CONFLICT);
-
-        $login = $this->cadastroLogin($request, $perfil->id);
-        if ($login == null)
-            return Response('{"codigo":3,"mesagem":"Nao foi possivel cadastrar"}',Response::HTTP_CONFLICT);
-
-        return Response('criado',Response::HTTP_CREATED);
-    }
-
-    /**
-     * Cadastro de um login
-     *
-     * @return void
-     */
-    private function cadastroLogin(Request $request, int $perfilId) {
-        $login = new Login;
-        $login->id = $perfilId;
-        $login->str_login = $request->input('login');
-        $login->str_senha = $request->input('senha');
-        $login->save();
-        return $login;
-    }
-
-    /**
-     * Cadastro de um perfil
-     *
-     * @return Usuario
-     */
-    private function cadastroPerfil(Request $request) {
-
-        $perfil = new Usuario;
-        $perfil->str_nome    = $request->input('nome');
-        $perfil->str_celular = $request->input('celular');
-        $perfil->str_email   = $request->input('email');
-        $perfil->str_genero  = $request->input('genero');
-        $perfil->str_cgc     = $request->input('cgc');
-        $perfil->str_tipo    = $request->input('tipo');
-        $perfil->dat_nasc    = $request->input('nascimento');
-
-        if (!$request->has('rua') && $request->input('rua') != null) {
-            $endereco = Endereco::create([
-                'str_cep'        => $request->input('cep'),
-                'str_numero'     => $request->input('numero'),
-                'str_logradouro' => $request->input('rua'),
-                'str_bairro'     => $request->input('bairro'),
-                'str_cidade'     => $request->input('cidade'),
-                'str_estado'     => $request->input('estado'),
-            ]);
-            $perfil->endereco_id = $endereco->id;
-        }
-
-        $perfil->save();
-
-        return $perfil;
+        $projeto = Projeto::create([
+            'str_nome' => $request->input('nome'),
+            'str_desc' => $request->input('descricao'),
+            'usuario_id' => $request->input('responsavel'),
+        ]);
+        return Response($projeto,Response::HTTP_CREATED);
     }
 
     public function detalhes(int $id) {
-        $proj = Projeto::innerJoin('usuario', 'usuarios.id', '=', 'usuario_id')
-            ->where('projeto.id', $id)
-            ->firstOrFail();
+        $proj = Projeto::find($id);
         if ($proj == null) return Response('{"codigo":3,"mesagem":"Nao Encontrado"}',Response::HTTP_NOT_FOUND);
-        //$proj->id = $id;
-        return Response($proj);
+        $usr = Usuario::find($proj->usuario_id);
+        if ($usr == null) return Response('{"codigo":3,"mesagem":"Nao Encontrado"}',Response::HTTP_NOT_FOUND);
+        return Response([
+            'id' => $proj->id,
+            'nome' => $proj->str_nome,
+            'descricao' => $proj->str_desc,
+            'fundacao' => $proj->created_at,
+            'responsavel' => $usr->nome,
+            'email' => $usr->str_email,
+            'celular' => $usr->str_celular,
+        ]);
     }
 
     public function delete(int $id) {
-        $usr = Usuario::find($id);
-        if ($usr == null) return Response('{"codigo":3,"mesagem":"Nao Encontrado"}',Response::HTTP_NOT_FOUND);
-        $usr->delete();
+        $proj = Projeto::find($id);
+        if ($proj == null) return Response('{"codigo":3,"mesagem":"Nao Encontrado"}',Response::HTTP_NOT_FOUND);
+        $proj->delete();
         return Response('',Response::HTTP_OK);
     }
 
     public function update(Request $request, int $id) {
-        $usr = Usuario::find($id);
-        if ($usr == null) return Response('{"codigo":3,"mesagem":"Nao Encontrado"}',Response::HTTP_NOT_FOUND);
-        $lgn = Login::find($id);
-        if ($lgn->str_senha    != $request->input('senha')) $lgn->str_senha     = $request->input('senha');
-        if ($usr->str_celular  != $request->input('celular')) $usr->str_celular = $request->input('celular');
-        if ($usr->str_nome     != $request->input('nome')) $usr->str_nome       = $request->input('nome');
-        if ($usr->str_email    != $request->input('email')) $usr->str_email     = $request->input('email');
-        if ($request->has('rua')){
-            $endereco = Endereco::find($usr->endereco_id);
-            $endereco->str_logradouro = $request->input('rua');
-            if ($usr->str_cep    != $request->input('cep'))    $usr->str_cep    = $request->input('cep');
-            if ($usr->str_numero != $request->input('numero')) $usr->str_numero = $request->input('numero');
-            if ($usr->str_bairro != $request->input('bairro')) $usr->str_bairro = $request->input('bairro');
-            if ($usr->str_cidade != $request->input('cidade')) $usr->str_cidade = $request->input('cidade');
-            if ($usr->str_estado != $request->input('estado')) $usr->str_estado = $request->input('estado');
-            $endereco->save();
-        }
-        $usr->save();
-        $lgn->save();
+        $prj = Projeto::find($id);
+        if ($prj == null) return Response('{"codigo":3,"mesagem":"Nao Encontrado"}',Response::HTTP_NOT_FOUND);
+        if ($prj->str_desc != $request->input('descricao')) $prj->str_desc = $request->input('descricao');
+        if ($prj->str_nome != $request->input('nome')) $prj->str_nome = $request->input('nome');
+        $prj->save();
         return Response('',Response::HTTP_OK);
     }
 }

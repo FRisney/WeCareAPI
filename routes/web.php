@@ -33,7 +33,7 @@ $router->group(['prefix' => 'users'], function() use ($router) {
 $router->group(['prefix' => 'projetos'], function() use ($router) {
     $router->get('/', 'ProjetoController@index');
     $router->post('/', 'ProjetoController@new');
-    $router->get('/{id}', 'ProjetoController@perfil');
+    $router->get('/{id}', 'ProjetoController@detalhes');
     $router->put('/{id}', 'ProjetoController@update');
     $router->delete('/{id}', 'ProjetoController@delete');
 });
