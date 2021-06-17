@@ -37,3 +37,15 @@ $router->group(['prefix' => 'projetos'], function() use ($router) {
     $router->put('/{id}', 'ProjetoController@update');
     $router->delete('/{id}', 'ProjetoController@delete');
 });
+
+$router->group(['prefix' => 'forum'], function() use ($router) {
+    $router->get('/', 'PostagemController@index');
+    $router->post('/', 'PostagemController@new');
+    $router->get('/{id}', 'PostagemController@detalhes');
+    $router->put('/{id}', 'PostagemController@update');
+    $router->delete('/{id}', 'PostagemController@delete');
+    $router->get('/{id}/comments', 'ComentarioController@detalhes');
+    $router->post('/{id}', 'ComentarioController@new');
+    $router->put('/{post_id}/comments/{comment_id}', 'ComentarioController@update');
+    $router->delete('/{post_id}/comments/{comment_id}', 'ComentarioController@delete');
+});
