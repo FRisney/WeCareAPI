@@ -1,16 +1,15 @@
 openapi: 3.0.0
 info:
-  version: 0.4.0
+  version: 0.4.1
   title: WeCareAPI
-  description: API para interagir com o Forum.
-  externalDocs:
-    - description: Codigos Fonte API
-      url: https://github.com/FRisney/WeCareAPI
-    - description: Codigos Fonte WebApp
-      url: https://github.com/2dsant/WeCare
+  description: API para interagir com o Forum. - [Codigo fonte](https://github.com/FRisney/WeCareAPI) / [Codigo fonte frontend](https://github.com/2dsant/WeCare)
 tags:
   - name: Forum
     description: Interacao com o Forum
+  - name: Postagens
+    description: Interacao com as postagens
+  - name: Comentarios
+    description: Interacao com os comentarios
   - name: Projetos
     description: Interacao com os Projetos
   - name: Usuarios
@@ -104,7 +103,7 @@ paths:
         '200':
           description: Atualizado com sucesso
           content:
-            application/json:
+            application/x-www-form-urlencoded:
               schema:
                 $ref: '#/components/schemas/UsuarioDetail'
         '403':
@@ -186,7 +185,7 @@ paths:
         - $ref: '#/components/parameters/Id'
       requestBody:
         content:
-          multipart/form-data:
+          application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/Projeto'
       responses:
@@ -215,6 +214,7 @@ paths:
     get:
       tags:
         - Forum
+        - Postagens
       description: retorna a lista de postagens
       parameters:
         - $ref: '#/components/parameters/offsetParam'
@@ -229,6 +229,7 @@ paths:
     post:
       tags:
         - Forum
+        - Postagens
       description: Insere uma nova postagem
       requestBody:
         required: true
@@ -253,6 +254,7 @@ paths:
     get:
       tags:
         - Forum
+        - Postagens
       description: retorna a postagem especifica
       parameters:
         - $ref: '#/components/parameters/offsetParam'
@@ -267,12 +269,13 @@ paths:
     put:
       tags:
         - Forum
+        - Postagens
       description: Atualiza os detalhes de uma postagem
       parameters:
         - $ref: '#/components/parameters/Id'
       requestBody:
         content:
-          multipart/form-data:
+          application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/Postagem'
       responses:
@@ -287,6 +290,7 @@ paths:
     delete:
       tags:
         - Forum
+        - Postagens
       description: Deleta uma postagem
       parameters:
         - $ref: '#/components/parameters/Id'
@@ -301,6 +305,7 @@ paths:
     get:
       tags:
         - Forum
+        - Comentarios
       description: Retorna a lista de comentarios da postagem
       parameters:
         - $ref: '#/components/parameters/offsetParam'
@@ -315,6 +320,7 @@ paths:
     post:
       tags:
         - Forum
+        - Comentarios
       description: Insere um novo comentario
       requestBody:
         content:
@@ -338,6 +344,7 @@ paths:
     put:
       tags:
         - Forum
+        - Comentarios
       description: Atualiza os detalhes de um comentario
       parameters:
         - name: comment_id
@@ -356,7 +363,7 @@ paths:
           example: 25
       requestBody:
         content:
-          multipart/form-data:
+          application/x-www-form-urlencoded:
             schema:
               $ref: '#/components/schemas/Postagem'
       responses:
@@ -371,6 +378,7 @@ paths:
     delete:
       tags:
         - Forum
+        - Comentarios
       description: Deleta um comentario
       parameters:
         - name: comment_id
@@ -625,6 +633,7 @@ components:
         - id
         - relator
         - data
+        - conteudo
       properties:
         id:
           type: integer
@@ -632,8 +641,9 @@ components:
           type: string
         data:
           type: string
+        conteudo:
+          type: string
     Comentarios:
       type: array
       items:
         $ref: '#/components/schemas/Comentario'
-

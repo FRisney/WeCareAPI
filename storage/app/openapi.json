@@ -1,1 +1,1038 @@
-{"openapi":"3.0.0","info":{"version":"0.4.0","title":"WeCareAPI","description":"API para interagir com o Forum.","externalDocs":[{"description":"Codigos Fonte API","url":"https://github.com/FRisney/WeCareAPI"},{"description":"Codigos Fonte WebApp","url":"https://github.com/2dsant/WeCare"}]},"tags":[{"name":"Forum","description":"Interacao com o Forum"},{"name":"Projetos","description":"Interacao com os Projetos"},{"name":"Usuarios","description":"Interacao com os usuarios"},{"name":"Beneficiarios","description":"Interacao com beneficiarios"},{"name":"Docs","description":"Documentacao"}],"servers":[{"url":"https://wecareapi.herokuapp.com","description":"Servidor principal"}],"paths":{"/docs.json":{"get":{"tags":["Docs"],"description":"Retorna o JSON desta documentacao.","responses":{"200":{"description":"Sucesso","content":{"application/json":{"schema":{"type":"string","format":"json"}}}}}}},"/users":{"get":{"tags":["Usuarios"],"description":"Retorna a lista de usuarios","parameters":[{"$ref":"#/components/parameters/offsetParam"},{"$ref":"#/components/parameters/limitParam"}],"responses":{"200":{"description":"Sucesso","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Usuarios"}}}}}},"post":{"tags":["Usuarios"],"description":"Insere um novo usuario","requestBody":{"content":{"multipart/form-data":{"schema":{"allOf":[{"$ref":"#/components/schemas/Login"},{"$ref":"#/components/schemas/Usuario"},{"$ref":"#/components/schemas/UsuarioDetail"}]}}}},"responses":{"201":{"description":"Inserido com sucesso"},"400":{"$ref":"#/components/responses/BadRequest"},"409":{"description":"Ja cadastrado","content":{"application/json":{"schema":{"$ref":"#/components/responses/AlreadyRegistered"}}}}}}},"/users/{id}":{"get":{"tags":["Usuarios"],"parameters":[{"$ref":"#/components/parameters/Id"}],"description":"Retorna detalhes do usuario","responses":{"200":{"description":"Sucesso","content":{"application/json":{"schema":{"allOf":[{"$ref":"#/components/schemas/Usuario"},{"$ref":"#/components/schemas/UsuarioDetail"}]}}}},"403":{"$ref":"#/components/responses/Prohibited"},"409":{"$ref":"#/components/responses/NotFound"}}},"put":{"tags":["Usuarios"],"description":"Atualiza os detalhes de um usuario","parameters":[{"$ref":"#/components/parameters/Id"}],"responses":{"200":{"description":"Atualizado com sucesso","content":{"application/json":{"schema":{"$ref":"#/components/schemas/UsuarioDetail"}}}},"403":{"$ref":"#/components/responses/Prohibited"},"409":{"$ref":"#/components/responses/NotFound"}}},"delete":{"tags":["Usuarios"],"description":"Deleta um Usuario","parameters":[{"$ref":"#/components/parameters/Id"}],"responses":{"200":{"description":"Usuario deletado com sucesso"},"403":{"$ref":"#/components/responses/Prohibited"},"409":{"$ref":"#/components/responses/NotFound"}}}},"/projetos":{"get":{"tags":["Projetos"],"description":"Retorna a lista de projetos cadastrados","parameters":[{"$ref":"#/components/parameters/offsetParam"},{"$ref":"#/components/parameters/limitParam"}],"responses":{"200":{"description":"Sucesso","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Projeto"}}}}}},"post":{"tags":["Projetos"],"description":"Insere um novo projeto","requestBody":{"required":true,"content":{"multipart/form-data":{"schema":{"$ref":"#/components/schemas/Projeto"}}}},"responses":{"201":{"description":"Projeto inserido com sucesso"},"400":{"$ref":"#/components/responses/BadRequest"},"403":{"$ref":"#/components/responses/Prohibited"},"409":{"description":"Ja cadastrado","content":{"application/json":{"schema":{"$ref":"#/components/responses/AlreadyRegistered"}}}}}}},"/projetos/{id}":{"get":{"tags":["Projetos"],"description":"Retorna os detalhes de um projeto","parameters":[{"$ref":"#/components/parameters/Id"}],"responses":{"200":{"description":"Ok","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Projeto"}}}},"404":{"$ref":"#/components/responses/NotFound"}}},"put":{"tags":["Projetos"],"description":"Atualiza os detalhes de um projeto","parameters":[{"$ref":"#/components/parameters/Id"}],"requestBody":{"content":{"multipart/form-data":{"schema":{"$ref":"#/components/schemas/Projeto"}}}},"responses":{"200":{"description":"Atualizado com sucesso","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Projeto"}}}},"404":{"$ref":"#/components/responses/NotFound"}}},"delete":{"tags":["Projetos"],"description":"Deleta um projeto","parameters":[{"$ref":"#/components/parameters/Id"}],"responses":{"200":{"description":"Projeto deletado com sucesso"},"403":{"$ref":"#/components/responses/Prohibited"},"409":{"$ref":"#/components/responses/NotFound"}}}},"/forum":{"get":{"tags":["Forum"],"description":"retorna a lista de postagens","parameters":[{"$ref":"#/components/parameters/offsetParam"},{"$ref":"#/components/parameters/limitParam"}],"responses":{"200":{"description":"Sucesso","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Postagens"}}}}}},"post":{"tags":["Forum"],"description":"Insere uma nova postagem","requestBody":{"required":true,"content":{"multipart/form-data":{"schema":{"$ref":"#/components/schemas/Postagem"}}}},"responses":{"201":{"description":"Postagem inserida com sucesso"},"400":{"$ref":"#/components/responses/BadRequest"},"403":{"$ref":"#/components/responses/Prohibited"},"409":{"description":"Ja cadastrado","content":{"application/json":{"schema":{"$ref":"#/components/responses/AlreadyRegistered"}}}}}}},"/forum/{id}":{"get":{"tags":["Forum"],"description":"retorna a postagem especifica","parameters":[{"$ref":"#/components/parameters/offsetParam"},{"$ref":"#/components/parameters/limitParam"}],"responses":{"200":{"description":"Sucesso","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Postagens"}}}}}},"put":{"tags":["Forum"],"description":"Atualiza os detalhes de uma postagem","parameters":[{"$ref":"#/components/parameters/Id"}],"requestBody":{"content":{"multipart/form-data":{"schema":{"$ref":"#/components/schemas/Postagem"}}}},"responses":{"200":{"description":"Atualizado com sucesso","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Postagem"}}}},"404":{"$ref":"#/components/responses/NotFound"}}},"delete":{"tags":["Forum"],"description":"Deleta uma postagem","parameters":[{"$ref":"#/components/parameters/Id"}],"responses":{"200":{"description":"Postagem deletada com sucesso"},"403":{"$ref":"#/components/responses/Prohibited"},"409":{"$ref":"#/components/responses/NotFound"}}}},"/forum/{id}/comments":{"get":{"tags":["Forum"],"description":"Retorna a lista de comentarios da postagem","parameters":[{"$ref":"#/components/parameters/offsetParam"},{"$ref":"#/components/parameters/limitParam"}],"responses":{"200":{"description":"Sucesso","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Postagens"}}}}}},"post":{"tags":["Forum"],"description":"Insere um novo comentario","requestBody":{"content":{"multipart/form-data":{"schema":{"$ref":"#/components/schemas/Comentario"}}}},"responses":{"201":{"description":"Comentario inserido com sucesso"},"400":{"$ref":"#/components/responses/BadRequest"},"403":{"$ref":"#/components/responses/Prohibited"},"409":{"description":"Ja cadastrado","content":{"application/json":{"schema":{"$ref":"#/components/responses/AlreadyRegistered"}}}}}}},"/forum/{post_id}/comments/{comment_id}":{"put":{"tags":["Forum"],"description":"Atualiza os detalhes de um comentario","parameters":[{"name":"comment_id","in":"path","required":true,"description":"Codigo do comentario","schema":{"type":"integer"},"example":25},{"name":"post_id","in":"path","required":true,"description":"Codigo da postagem","schema":{"type":"integer"},"example":25}],"requestBody":{"content":{"multipart/form-data":{"schema":{"$ref":"#/components/schemas/Postagem"}}}},"responses":{"200":{"description":"Atualizado com sucesso","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Postagem"}}}},"404":{"$ref":"#/components/responses/NotFound"}}},"delete":{"tags":["Forum"],"description":"Deleta um comentario","parameters":[{"name":"comment_id","in":"path","required":true,"description":"Codigo do comentario","schema":{"type":"integer"},"example":25},{"name":"post_id","in":"path","required":true,"description":"Codigo da postagem","schema":{"type":"integer"},"example":25}],"responses":{"200":{"description":"Comentario deletado com sucesso"},"403":{"$ref":"#/components/responses/Prohibited"},"409":{"$ref":"#/components/responses/NotFound"}}}}},"components":{"parameters":{"Id":{"name":"id","in":"path","required":true,"description":"Codigo","schema":{"type":"integer"},"example":25},"offsetParam":{"name":"de","in":"query","description":"Numero de itens a serem ignorado, a partir do primeiro.","required":false,"schema":{"type":"integer","format":"int32","minimum":0,"default":0}},"limitParam":{"name":"qtde","in":"query","description":"Numero maximo de itens a retornar.","required":false,"schema":{"type":"integer","format":"int32","minimum":1,"maximum":100,"default":20}}},"responses":{"BadRequest":{"description":"Bad Request","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Error"},"example":{"codigo":1,"mensagem":"Requsicao nao atende especificacao"}}}},"Prohibited":{"description":"Acesso Restrito","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Error"},"example":{"codigo":2,"mensagem":"Acesso Restrito"}}}},"NotFound":{"description":"Nao encontrado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Error"},"example":{"codigo":3,"mensagem":"Nao encontrado"}}}},"AlreadyRegistered":{"description":"Ja cadastrado","content":{"application/json":{"schema":{"$ref":"#/components/schemas/Error"},"example":{"codigo":4,"mensagem":"Ja cadastrado"}}}}},"schemas":{"Error":{"type":"object","required":["codigo","mensagem"],"properties":{"codigo":{"type":"integer"},"mensagem":{"type":"string"}}},"Projeto":{"type":"object","required":["nome","descricao","responsavel"],"properties":{"nome":{"type":"string","default":"Unicesumar Portao"},"descricao":{"type":"string","default":"Unicesumar Portao"},"fundacao":{"type":"string","default":"2021-01-01"},"responsavel":{"type":"string","default":"81070-190"}}},"Endereco":{"type":"object","required":["cep","numero","rua","bairro","cidade","estado"],"properties":{"cep":{"type":"string","format":"/\\d{7}-\\d{3}/","default":"81070-190"},"numero":{"type":"string","default":"673"},"rua":{"type":"string","default":"Rua Itajuba"},"bairro":{"type":"string","default":"Portao"},"cidade":{"type":"string","default":"Curitiba"},"estado":{"type":"string","default":"Parana"}}},"Login":{"type":"object","required":["id","login","senha"],"properties":{"id":{"type":"integer"},"login":{"type":"string"},"senha":{"type":"string","format":"password"}}},"Usuario":{"type":"object","required":["id","nome"],"properties":{"id":{"type":"integer","default":25},"nome":{"type":"string","default":"Joao da Silva"}}},"UsuarioDetail":{"type":"object","required":["genero"],"properties":{"celular":{"type":"string","format":"/\\(\\d{2}\\)\\ \\d{5}-\\d{4}/","default":"(41) 98765-4321"},"email":{"type":"string","format":"email"},"genero":{"type":"string","format":"/[a-zA-Z]/","enum":["M","F"]},"nascimento":{"type":"string","format":"/\\d{4}-\\d{2}-\\d{2}/","default":"2021-01-01"},"cgc":{"type":"string"},"tipo":{"type":"string","enum":["F","J"]},"endereco":{"$ref":"#/components/schemas/Endereco"}}},"Usuarios":{"type":"array","items":{"$ref":"#/components/schemas/Usuario"}},"Postagem":{"type":"object","required":["titulo","texto","relator"],"properties":{"titulo":{"type":"string"},"texto":{"type":"string"},"relator":{"type":"integer"}}},"PostagemDetalhe":{"type":"object","required":["id","titulo","texto","relator","data"],"properties":{"id":{"type":"integer"},"titulo":{"type":"string"},"texto":{"type":"string"},"relator":{"type":"integer"},"data":{"type":"string"}}},"Postagens":{"type":"array","items":{"$ref":"#/components/schemas/PostagemDetalhe"}},"Comentario":{"type":"object","required":["id","relator","data"],"properties":{"id":{"type":"integer"},"relator":{"type":"string"},"data":{"type":"string"}}},"Comentarios":{"type":"array","items":{"$ref":"#/components/schemas/Comentario"}}}}}
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "0.4.1",
+    "title": "WeCareAPI",
+    "description": "API para interagir com o Forum. - [Codigo fonte](https://github.com/FRisney/WeCareAPI) / [Codigo fonte frontend](https://github.com/2dsant/WeCare)"
+  },
+  "tags": [
+    {
+      "name": "Forum",
+      "description": "Interacao com o Forum"
+    },
+    {
+      "name": "Postagens",
+      "description": "Interacao com as postagens"
+    },
+    {
+      "name": "Comentarios",
+      "description": "Interacao com os comentarios"
+    },
+    {
+      "name": "Projetos",
+      "description": "Interacao com os Projetos"
+    },
+    {
+      "name": "Usuarios",
+      "description": "Interacao com os usuarios"
+    },
+    {
+      "name": "Beneficiarios",
+      "description": "Interacao com beneficiarios"
+    },
+    {
+      "name": "Docs",
+      "description": "Documentacao"
+    }
+  ],
+  "servers": [
+    {
+      "url": "https://wecareapi.herokuapp.com",
+      "description": "Servidor principal"
+    }
+  ],
+  "paths": {
+    "/docs.json": {
+      "get": {
+        "tags": [
+          "Docs"
+        ],
+        "description": "Retorna o JSON desta documentacao.",
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "format": "json"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "tags": [
+          "Usuarios"
+        ],
+        "description": "Retorna a lista de usuarios",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/offsetParam"
+          },
+          {
+            "$ref": "#/components/parameters/limitParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Usuarios"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Usuarios"
+        ],
+        "description": "Insere um novo usuario",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/Login"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Usuario"
+                  },
+                  {
+                    "$ref": "#/components/schemas/UsuarioDetail"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Inserido com sucesso"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "409": {
+            "description": "Ja cadastrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/AlreadyRegistered"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "tags": [
+          "Usuarios"
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Id"
+          }
+        ],
+        "description": "Retorna detalhes do usuario",
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "$ref": "#/components/schemas/Usuario"
+                    },
+                    {
+                      "$ref": "#/components/schemas/UsuarioDetail"
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/Prohibited"
+          },
+          "409": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Usuarios"
+        ],
+        "description": "Atualiza os detalhes de um usuario",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Atualizado com sucesso",
+            "content": {
+              "application/x-www-form-urlencoded": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsuarioDetail"
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/Prohibited"
+          },
+          "409": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Usuarios"
+        ],
+        "description": "Deleta um Usuario",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuario deletado com sucesso"
+          },
+          "403": {
+            "$ref": "#/components/responses/Prohibited"
+          },
+          "409": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/projetos": {
+      "get": {
+        "tags": [
+          "Projetos"
+        ],
+        "description": "Retorna a lista de projetos cadastrados",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/offsetParam"
+          },
+          {
+            "$ref": "#/components/parameters/limitParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Projeto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Projetos"
+        ],
+        "description": "Insere um novo projeto",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Projeto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Projeto inserido com sucesso"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Prohibited"
+          },
+          "409": {
+            "description": "Ja cadastrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/AlreadyRegistered"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projetos/{id}": {
+      "get": {
+        "tags": [
+          "Projetos"
+        ],
+        "description": "Retorna os detalhes de um projeto",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Projeto"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Projetos"
+        ],
+        "description": "Atualiza os detalhes de um projeto",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Id"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/Projeto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Atualizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Projeto"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Projetos"
+        ],
+        "description": "Deleta um projeto",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Projeto deletado com sucesso"
+          },
+          "403": {
+            "$ref": "#/components/responses/Prohibited"
+          },
+          "409": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/forum": {
+      "get": {
+        "tags": [
+          "Forum",
+          "Postagens"
+        ],
+        "description": "retorna a lista de postagens",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/offsetParam"
+          },
+          {
+            "$ref": "#/components/parameters/limitParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Postagens"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Forum",
+          "Postagens"
+        ],
+        "description": "Insere uma nova postagem",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Postagem"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Postagem inserida com sucesso"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Prohibited"
+          },
+          "409": {
+            "description": "Ja cadastrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/AlreadyRegistered"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/forum/{id}": {
+      "get": {
+        "tags": [
+          "Forum",
+          "Postagens"
+        ],
+        "description": "retorna a postagem especifica",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/offsetParam"
+          },
+          {
+            "$ref": "#/components/parameters/limitParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Postagens"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Forum",
+          "Postagens"
+        ],
+        "description": "Atualiza os detalhes de uma postagem",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Id"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/Postagem"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Atualizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Postagem"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Forum",
+          "Postagens"
+        ],
+        "description": "Deleta uma postagem",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Postagem deletada com sucesso"
+          },
+          "403": {
+            "$ref": "#/components/responses/Prohibited"
+          },
+          "409": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    },
+    "/forum/{id}/comments": {
+      "get": {
+        "tags": [
+          "Forum",
+          "Comentarios"
+        ],
+        "description": "Retorna a lista de comentarios da postagem",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/offsetParam"
+          },
+          {
+            "$ref": "#/components/parameters/limitParam"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Postagens"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Forum",
+          "Comentarios"
+        ],
+        "description": "Insere um novo comentario",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Comentario"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Comentario inserido com sucesso"
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Prohibited"
+          },
+          "409": {
+            "description": "Ja cadastrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/responses/AlreadyRegistered"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/forum/{post_id}/comments/{comment_id}": {
+      "put": {
+        "tags": [
+          "Forum",
+          "Comentarios"
+        ],
+        "description": "Atualiza os detalhes de um comentario",
+        "parameters": [
+          {
+            "name": "comment_id",
+            "in": "path",
+            "required": true,
+            "description": "Codigo do comentario",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 25
+          },
+          {
+            "name": "post_id",
+            "in": "path",
+            "required": true,
+            "description": "Codigo da postagem",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 25
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/Postagem"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Atualizado com sucesso",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Postagem"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Forum",
+          "Comentarios"
+        ],
+        "description": "Deleta um comentario",
+        "parameters": [
+          {
+            "name": "comment_id",
+            "in": "path",
+            "required": true,
+            "description": "Codigo do comentario",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 25
+          },
+          {
+            "name": "post_id",
+            "in": "path",
+            "required": true,
+            "description": "Codigo da postagem",
+            "schema": {
+              "type": "integer"
+            },
+            "example": 25
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Comentario deletado com sucesso"
+          },
+          "403": {
+            "$ref": "#/components/responses/Prohibited"
+          },
+          "409": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "parameters": {
+      "Id": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "Codigo",
+        "schema": {
+          "type": "integer"
+        },
+        "example": 25
+      },
+      "offsetParam": {
+        "name": "de",
+        "in": "query",
+        "description": "Numero de itens a serem ignorado, a partir do primeiro.",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "format": "int32",
+          "minimum": 0,
+          "default": 0
+        }
+      },
+      "limitParam": {
+        "name": "qtde",
+        "in": "query",
+        "description": "Numero maximo de itens a retornar.",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "format": "int32",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 20
+        }
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "Bad Request",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "codigo": 1,
+              "mensagem": "Requsicao nao atende especificacao"
+            }
+          }
+        }
+      },
+      "Prohibited": {
+        "description": "Acesso Restrito",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "codigo": 2,
+              "mensagem": "Acesso Restrito"
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "Nao encontrado",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "codigo": 3,
+              "mensagem": "Nao encontrado"
+            }
+          }
+        }
+      },
+      "AlreadyRegistered": {
+        "description": "Ja cadastrado",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            },
+            "example": {
+              "codigo": 4,
+              "mensagem": "Ja cadastrado"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "Error": {
+        "type": "object",
+        "required": [
+          "codigo",
+          "mensagem"
+        ],
+        "properties": {
+          "codigo": {
+            "type": "integer"
+          },
+          "mensagem": {
+            "type": "string"
+          }
+        }
+      },
+      "Projeto": {
+        "type": "object",
+        "required": [
+          "nome",
+          "descricao",
+          "responsavel"
+        ],
+        "properties": {
+          "nome": {
+            "type": "string",
+            "default": "Unicesumar Portao"
+          },
+          "descricao": {
+            "type": "string",
+            "default": "Unicesumar Portao"
+          },
+          "fundacao": {
+            "type": "string",
+            "default": "2021-01-01"
+          },
+          "responsavel": {
+            "type": "string",
+            "default": "81070-190"
+          }
+        }
+      },
+      "Endereco": {
+        "type": "object",
+        "required": [
+          "cep",
+          "numero",
+          "rua",
+          "bairro",
+          "cidade",
+          "estado"
+        ],
+        "properties": {
+          "cep": {
+            "type": "string",
+            "format": "/\\d{7}-\\d{3}/",
+            "default": "81070-190"
+          },
+          "numero": {
+            "type": "string",
+            "default": "673"
+          },
+          "rua": {
+            "type": "string",
+            "default": "Rua Itajuba"
+          },
+          "bairro": {
+            "type": "string",
+            "default": "Portao"
+          },
+          "cidade": {
+            "type": "string",
+            "default": "Curitiba"
+          },
+          "estado": {
+            "type": "string",
+            "default": "Parana"
+          }
+        }
+      },
+      "Login": {
+        "type": "object",
+        "required": [
+          "id",
+          "login",
+          "senha"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "login": {
+            "type": "string"
+          },
+          "senha": {
+            "type": "string",
+            "format": "password"
+          }
+        }
+      },
+      "Usuario": {
+        "type": "object",
+        "required": [
+          "id",
+          "nome"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "default": 25
+          },
+          "nome": {
+            "type": "string",
+            "default": "Joao da Silva"
+          }
+        }
+      },
+      "UsuarioDetail": {
+        "type": "object",
+        "required": [
+          "genero"
+        ],
+        "properties": {
+          "celular": {
+            "type": "string",
+            "format": "/\\(\\d{2}\\)\\ \\d{5}-\\d{4}/",
+            "default": "(41) 98765-4321"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "genero": {
+            "type": "string",
+            "format": "/[a-zA-Z]/",
+            "enum": [
+              "M",
+              "F"
+            ]
+          },
+          "nascimento": {
+            "type": "string",
+            "format": "/\\d{4}-\\d{2}-\\d{2}/",
+            "default": "2021-01-01"
+          },
+          "cgc": {
+            "type": "string"
+          },
+          "tipo": {
+            "type": "string",
+            "enum": [
+              "F",
+              "J"
+            ]
+          },
+          "endereco": {
+            "$ref": "#/components/schemas/Endereco"
+          }
+        }
+      },
+      "Usuarios": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Usuario"
+        }
+      },
+      "Postagem": {
+        "type": "object",
+        "required": [
+          "titulo",
+          "texto",
+          "relator"
+        ],
+        "properties": {
+          "titulo": {
+            "type": "string"
+          },
+          "texto": {
+            "type": "string"
+          },
+          "relator": {
+            "type": "integer"
+          }
+        }
+      },
+      "PostagemDetalhe": {
+        "type": "object",
+        "required": [
+          "id",
+          "titulo",
+          "texto",
+          "relator",
+          "data"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "titulo": {
+            "type": "string"
+          },
+          "texto": {
+            "type": "string"
+          },
+          "relator": {
+            "type": "integer"
+          },
+          "data": {
+            "type": "string"
+          }
+        }
+      },
+      "Postagens": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/PostagemDetalhe"
+        }
+      },
+      "Comentario": {
+        "type": "object",
+        "required": [
+          "id",
+          "relator",
+          "data",
+          "conteudo"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "relator": {
+            "type": "string"
+          },
+          "data": {
+            "type": "string"
+          },
+          "conteudo": {
+            "type": "string"
+          }
+        }
+      },
+      "Comentarios": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Comentario"
+        }
+      }
+    }
+  }
+}

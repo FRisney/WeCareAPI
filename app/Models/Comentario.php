@@ -4,14 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Postagem extends Model
+class Comentario extends Model
 {
-    protected $table = 'postagens';
-    protected $primaryKey = 'id';
     protected $fillable = [
         'str_titulo',
-        'str_texto',
+        'str_coment',
         'usuario_id',
+        'postagem_id',
     ];
 
     /**

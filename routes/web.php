@@ -44,8 +44,9 @@ $router->group(['prefix' => 'forum'], function() use ($router) {
     $router->get('/{id}', 'PostagemController@detalhes');
     $router->put('/{id}', 'PostagemController@update');
     $router->delete('/{id}', 'PostagemController@delete');
-    $router->get('/{id}/comments', 'ComentarioController@detalhes');
-    $router->post('/{id}', 'ComentarioController@new');
+
+    $router->get('/{post_id}/comments', 'ComentarioController@index');
+    $router->post('/{post_id}/comments', 'ComentarioController@new');
     $router->put('/{post_id}/comments/{comment_id}', 'ComentarioController@update');
     $router->delete('/{post_id}/comments/{comment_id}', 'ComentarioController@delete');
 });
